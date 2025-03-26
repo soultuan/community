@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: community
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: xyl20001122
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+
+server:
+  port: 8080
+  servlet:
+    context-path: /community
+
+mybatis:
+  mapper-locations: classpath:com/tuanzisama/community/mapper/*.xml
+  type-aliases-package: com.tuanzisama.community.pojo
+  configuration:
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
