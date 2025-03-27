@@ -8,4 +8,25 @@
         from user
         where id = #{userId}
     </select>
+
+    <select id="selectUserByUsername" resultType="User">
+        select id,username,password,salt,email,type,status,activation_code,header_url,create_time
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="selectUserByEmail" resultType="User">
+        select id,username,password,salt,email,type,status,activation_code,header_url,create_time
+        from user
+        where email = #{email}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user(id,username,password,salt,email,type,status,activation_code,header_url,create_time)
+        values (null,#{username},#{password},#{salt},#{email},#{type},#{status},#{activationCode},#{headerUrl},#{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update user set status=#{status} where id=#{userId}
+    </update>
 </mapper>

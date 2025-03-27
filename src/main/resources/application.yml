@@ -13,6 +13,14 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       idle-timeout: 30000
+  mail:
+    host: smtp.qq.com
+    port: 465
+    protocol: smtp
+    username: 763302385@qq.com
+    password: sprxgnwtczgxbejf
+    ssl:
+      enabled: true
 
 server:
   port: 8080
@@ -25,3 +33,7 @@ mybatis:
   configuration:
     use-generated-keys: true
     map-underscore-to-camel-case: true
+
+community:
+  path:
+    domain: http://localhost:8080
