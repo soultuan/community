@@ -1,8 +1,15 @@
 package com.tuanzisama.community.controller;
 
+import com.google.code.kaptcha.Producer;
+import com.tuanzisama.community.config.KaptchaConfig;
 import com.tuanzisama.community.pojo.User;
 import com.tuanzisama.community.service.UserService;
 import com.tuanzisama.community.util.CommunityConstant;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +17,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Map;
 
 @Controller
 public class LoginController implements CommunityConstant {
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private UserService userService;
+    @Autowired
+    private KaptchaConfig kaptchaConfig;
 
     @GetMapping("/register")
     public String getRegisterPage() {
@@ -57,5 +70,20 @@ public class LoginController implements CommunityConstant {
         }
 
         return "/site/operate-result";
+    }
+
+    @GetMapping("/kaptcha")
+    public void kaptcha(HttpServletResponse response, HttpSession session) throws IOException {
+        Producer producer = kaptchaConfig.kaptchaProducer();
+        String text = producer.createText();
+        BufferedImage image = producer.createImage(text);
+
+        session.setAttribute("kaptcha", text);
+        response.setContentType("image/png");
+        try {
+            ImageIO.write(image, "png", response.getOutputStream());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 }
