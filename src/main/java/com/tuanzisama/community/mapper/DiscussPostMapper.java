@@ -11,4 +11,8 @@ public interface DiscussPostMapper {
     List<DiscussPost> selectDiscussPosts(@Param("userId") Integer userId,@Param("offset") Integer offset,@Param("pageSize") Integer pageSize);
 
     Integer countDiscussPosts(@Param("userId") Integer userId);
+
+    Integer insertDiscussPost(DiscussPost discussPost);
+
+    DiscussPost selectDiscussPostById(Integer discussPostId);
 }

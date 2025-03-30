@@ -6,16 +6,17 @@ import com.tuanzisama.community.pojo.User;
 import com.tuanzisama.community.service.UserService;
 import com.tuanzisama.community.util.CommunityConstant;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,6 +30,8 @@ public class LoginController implements CommunityConstant {
     private UserService userService;
     @Autowired
     private KaptchaConfig kaptchaConfig;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @GetMapping("/register")
     public String getRegisterPage() {
@@ -85,5 +88,34 @@ public class LoginController implements CommunityConstant {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    @PostMapping("/login")
+    public String login(String username, String password, String code, @RequestParam(value = "rememberme",defaultValue = "false") Boolean rememberme, Model model, HttpSession session, HttpServletResponse response) throws IOException {
+        String kaptcha = (String) session.getAttribute("kaptcha");
+        if(StringUtils.isEmpty(code) ||StringUtils.isEmpty(kaptcha)||!kaptcha.equalsIgnoreCase(code)){
+            model.addAttribute("codeMsg","验证码错误");
+            return "/site/login";
+        }
+
+        Map<String, Object> map = userService.login(username, password, rememberme);
+        if(map.containsKey("ticket")){
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
+            cookie.setPath(contextPath);
+            Integer expiredTime = rememberme?REMEMBER_EXPIRED_SECONDS:DEFAULT_EXPIRED_SECONDS;
+            cookie.setMaxAge(expiredTime);
+            response.addCookie(cookie);
+            return "redirect:/index";
+        }else {
+            model.addAttribute("usernameMsg",map.get("usernameMsg"));
+            model.addAttribute("passwordMsg",map.get("passwordMsg"));
+            return "/site/login";
+        }
+    }
+
+    @GetMapping("/logout")
+    private String logout(@CookieValue("ticket") String ticket) {
+        userService.logout(ticket);
+        return "redirect:/login";
     }
 }

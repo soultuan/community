@@ -8,4 +8,8 @@ public interface DiscussPostService {
     List<DiscussPost> selectDiscussPosts(Integer userId, Integer offset, Integer pageSize);
 
     Integer countDiscussPosts(Integer userId);
+
+    void insertDiscussPost(String title, String content);
+
+    DiscussPost selectDiscussPostById(Integer discussPostId);
 }

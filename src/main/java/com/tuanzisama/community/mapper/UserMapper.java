@@ -16,4 +16,8 @@ public interface UserMapper {
     void insertUser(User user);
 
     void updateStatus(@Param("userId") Integer userId,@Param("status") Integer status);
+
+    Integer updateHeaderUrl(@Param("id") Integer id,@Param("headerUrl") String headerUrl);
+
+    void updatePassword(Integer id, String newPassword);
 }
