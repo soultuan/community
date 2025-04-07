@@ -20,4 +20,6 @@ public interface UserMapper {
     Integer updateHeaderUrl(@Param("id") Integer id,@Param("headerUrl") String headerUrl);
 
     void updatePassword(Integer id, String newPassword);
+
+    User selectUserByName(String username);
 }

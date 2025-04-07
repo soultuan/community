@@ -13,5 +13,7 @@ public interface MessageMapper {
     List<Message> selectDetailMessageListByConversationId(@Param("conversationId") String conversationId,@Param("offset") Integer offset,@Param("limit") Integer limit);
     Integer countDetailMessageListByConversationId(String conversationId);
     Integer countUnreadMessageList(@Param("conversationId") String conversationId,@Param("userId") Integer userId);
+    Integer insertMessage(Message message);
+    Integer updateMessageWithStatus(@Param("ids") List<Integer> ids,@Param("status") Integer status);
 
 }

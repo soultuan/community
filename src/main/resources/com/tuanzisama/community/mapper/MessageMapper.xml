@@ -64,5 +64,17 @@
         </where>
     </select>
 
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+        insert into message(from_id,to_id,conversation_id,content,status,create_time)
+        values (#{fromId},#{toId},#{conversationId},#{content},#{status},#{createTime})
+    </insert>
 
+    <update id="updateMessageWithStatus">
+        update message
+        set status = #{status}
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

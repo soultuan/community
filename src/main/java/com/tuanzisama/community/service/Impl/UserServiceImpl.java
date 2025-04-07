@@ -157,5 +157,10 @@ public class UserServiceImpl implements UserService, CommunityConstant {
         userMapper.updatePassword(id,newPassword);
     }
 
+    @Override
+    public User selectUserByName(String username) {
+        return userMapper.selectUserByName(username);
+    }
+
 
 }

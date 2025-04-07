@@ -21,4 +21,6 @@ public interface UserService {
     Integer updateHeaderUrl(Integer id, String headerUrl);
 
     void updatePassword(Integer id, String newPassword);
+
+    User selectUserByName(String username);
 }

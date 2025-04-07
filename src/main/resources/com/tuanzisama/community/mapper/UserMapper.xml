@@ -21,6 +21,12 @@
         where email = #{email}
     </select>
 
+    <select id="selectUserByName" resultType="User">
+        select id,username,password,salt,email,type,status,activation_code,header_url,create_time
+        from user
+        where username = #{username}
+    </select>
+
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user(id,username,password,salt,email,type,status,activation_code,header_url,create_time)
         values (null,#{username},#{password},#{salt},#{email},#{type},#{status},#{activationCode},#{headerUrl},#{createTime})
