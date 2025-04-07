@@ -42,4 +42,9 @@ public class HomeController {
         model.addAttribute("discussPostList",discussPostList);
         return "/index";
     }
+
+    @GetMapping("/error")
+    public String getErrorPage() {
+        return "/site/500";
+    }
 }
