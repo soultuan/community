@@ -2,6 +2,7 @@ package com.tuanzisama.community.controller;
 
 import com.tuanzisama.community.annotation.LoginRequired;
 import com.tuanzisama.community.pojo.User;
+import com.tuanzisama.community.service.LikeService;
 import com.tuanzisama.community.service.UserService;
 import com.tuanzisama.community.util.CommunityUtil;
 import com.tuanzisama.community.util.ThreadLocalUtil;
@@ -35,6 +36,8 @@ public class UserController {
     private String contextPath;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -111,6 +114,19 @@ public class UserController {
         userService.updatePassword(user.getId(),CommunityUtil.md5(newPassword+user.getSalt()));
         userService.logout(ticket);
         return "redirect:/login";
+    }
+
+    @GetMapping("/profile/{userId}")
+    public String profile(@PathVariable("userId") Integer userId, Model model) {
+        User user = userService.selectUserById(userId);
+        if(user==null) {
+            throw new IllegalArgumentException("用户不存在！");
+        }
+        Integer likeCount = likeService.countUserLike(userId);
+        model.addAttribute("user",user);
+        model.addAttribute("likeCount",likeCount);
+
+        return "/site/profile";
     }
 
 }

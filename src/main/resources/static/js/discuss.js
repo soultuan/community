@@ -1,4 +1,6 @@
 function like(btn,entityType,entityId,entityUserId){
+    // 打印传入的参数
+    entityUserId = Number(entityUserId);
     $.post(
         CONTEXT_PATH + "/like",
         {"entityType":entityType,"entityId":entityId,"entityUserId":entityUserId},

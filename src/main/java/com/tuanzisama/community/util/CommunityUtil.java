@@ -41,4 +41,5 @@ public class CommunityUtil {
     public static String getJsonString(Integer code){
         return getJsonString(code,null,null);
     }
+
 }
