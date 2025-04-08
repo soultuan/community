@@ -6,6 +6,7 @@ import com.tuanzisama.community.pojo.Page;
 import com.tuanzisama.community.pojo.User;
 import com.tuanzisama.community.service.CommentService;
 import com.tuanzisama.community.service.DiscussPostService;
+import com.tuanzisama.community.service.LikeService;
 import com.tuanzisama.community.service.UserService;
 import com.tuanzisama.community.util.CommunityConstant;
 import com.tuanzisama.community.util.CommunityUtil;
@@ -29,6 +30,8 @@ public class DiscussPostController implements CommunityConstant {
     private UserService userService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private LikeService likeService;
 
     @PostMapping("/insertDiscussPost")
     @ResponseBody
@@ -48,6 +51,11 @@ public class DiscussPostController implements CommunityConstant {
         model.addAttribute("post", discussPost);
         User user = userService.selectUserById(Integer.valueOf(discussPost.getUserId()));
         model.addAttribute("user", user);
+        Long likeCount = likeService.countLike(ENTITY_TYPE_POST, discussPost.getId());
+        model.addAttribute("likeCount", likeCount);
+        User loginUser = ThreadLocalUtil.get();
+        Integer likeStatus = loginUser!=null?likeService.likeStatus(loginUser.getId(), ENTITY_TYPE_POST, discussPost.getId()):0;
+        model.addAttribute("likeStatus",likeStatus);
 
         page.setRows(commentService.countCommentByEntity(ENTITY_TYPE_POST,discussPost.getId()));
         page.setLimit(5);
@@ -61,6 +69,10 @@ public class DiscussPostController implements CommunityConstant {
                 map.put("comment", comment);
                 User commentUser = userService.selectUserById(comment.getUserId());
                 map.put("user", commentUser);
+                likeCount = likeService.countLike(ENTITY_TYPE_COMMENT, comment.getId());
+                map.put("likeCount", likeCount);
+                likeStatus = loginUser!=null?likeService.likeStatus(loginUser.getId(), ENTITY_TYPE_COMMENT, comment.getId()):0;
+                map.put("likeStatus",likeStatus);
 
                 List<Comment> replys = commentService.selectCommentByEntity(ENTITY_TYPE_COMMENT, comment.getId(),0,Integer.MAX_VALUE);
                 List<Map<String,Object>> replyList = new ArrayList<>();
@@ -70,6 +82,10 @@ public class DiscussPostController implements CommunityConstant {
                         User fromUser = userService.selectUserById(reply.getUserId());
                         replyMap.put("reply", reply);
                         replyMap.put("user", fromUser);
+                        likeCount = likeService.countLike(ENTITY_TYPE_COMMENT, reply.getId());
+                        replyMap.put("likeCount", likeCount);
+                        likeStatus = loginUser!=null?likeService.likeStatus(loginUser.getId(), ENTITY_TYPE_COMMENT, reply.getId()):0;
+                        replyMap.put("likeStatus",likeStatus);
 
                         if(reply.getTargetId()==0){
                             replyMap.put("target", null);

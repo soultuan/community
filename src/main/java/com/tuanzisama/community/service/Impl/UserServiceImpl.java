@@ -10,6 +10,7 @@ import com.tuanzisama.community.util.CommunityUtil;
 import com.tuanzisama.community.util.MailClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.TemplateEngine;
@@ -34,7 +35,6 @@ public class UserServiceImpl implements UserService, CommunityConstant {
     private TemplateEngine templateEngine;
     @Autowired
     private LoginTicketMapper loginTicketMapper;
-
     @Override
     public User selectUserById(Integer userId) {
         return userMapper.selectUserById(userId);

@@ -4,7 +4,9 @@ import com.tuanzisama.community.pojo.DiscussPost;
 import com.tuanzisama.community.pojo.Page;
 import com.tuanzisama.community.pojo.User;
 import com.tuanzisama.community.service.DiscussPostService;
+import com.tuanzisama.community.service.LikeService;
 import com.tuanzisama.community.service.UserService;
+import com.tuanzisama.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
     @Autowired
     private DiscussPostService discussPostService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
 
 
     @GetMapping("/index")
@@ -36,6 +40,8 @@ public class HomeController {
                 User user = userService.selectUserById(Integer.valueOf(post.getUserId()));
                 discussPostMap.put("post",post);
                 discussPostMap.put("user",user);
+                Long likeCount = likeService.countLike(ENTITY_TYPE_POST,post.getId());
+                discussPostMap.put("likeCount",likeCount);
                 discussPostList.add(discussPostMap);
             }
         }
