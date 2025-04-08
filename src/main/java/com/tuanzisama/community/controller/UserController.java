@@ -2,8 +2,10 @@ package com.tuanzisama.community.controller;
 
 import com.tuanzisama.community.annotation.LoginRequired;
 import com.tuanzisama.community.pojo.User;
+import com.tuanzisama.community.service.FollowService;
 import com.tuanzisama.community.service.LikeService;
 import com.tuanzisama.community.service.UserService;
+import com.tuanzisama.community.util.CommunityConstant;
 import com.tuanzisama.community.util.CommunityUtil;
 import com.tuanzisama.community.util.ThreadLocalUtil;
 import jakarta.servlet.ServletOutputStream;
@@ -25,7 +27,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstant {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Value("${community.path.domain}")
@@ -38,6 +40,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private LikeService likeService;
+    @Autowired
+    private FollowService followService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -126,7 +130,23 @@ public class UserController {
         model.addAttribute("user",user);
         model.addAttribute("likeCount",likeCount);
 
+        //是否已关注
+        User loginUser = ThreadLocalUtil.get();
+        boolean followed = false;
+        if(loginUser!=null) {
+            followed =  followService.isFollower(loginUser.getId(),ENTITY_TYPE_USER,userId);
+        }
+        model.addAttribute("hasFollowed",followed);
+
+        //关注数量
+        Long followeeCount = followService.followeeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount",followeeCount);
+        //粉丝数量
+        Long followerCount = followService.followerCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followerCount",followerCount);
+
         return "/site/profile";
     }
+
 
 }

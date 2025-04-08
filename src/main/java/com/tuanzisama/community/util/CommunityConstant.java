@@ -10,4 +10,5 @@ public interface CommunityConstant {
 
     Integer ENTITY_TYPE_POST = 1;
     Integer ENTITY_TYPE_COMMENT = 2;
+    Integer ENTITY_TYPE_USER = 3;
 }
