@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String ticket = CookieUtil.getValue(request, "ticket");
         if (ticket != null) {
             LoginTicket loginTicket = userService.selectByTicket(ticket);
-            if(loginTicket!=null&&loginTicket.getStatus()==0&&loginTicket.getExpired().after(new Date())) {
+            if(loginTicket!=null&&loginTicket.getStatus()!=null&&loginTicket.getStatus()==0&&loginTicket.getExpired().after(new Date())) {
                 User user = userService.selectUserById(loginTicket.getUserId());
                 ThreadLocalUtil.set(user);
             }
