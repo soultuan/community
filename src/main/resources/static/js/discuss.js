@@ -1,9 +1,9 @@
-function like(btn,entityType,entityId,entityUserId){
+function like(btn,entityType,entityId,entityUserId,postId){
     // 打印传入的参数
     entityUserId = Number(entityUserId);
     $.post(
         CONTEXT_PATH + "/like",
-        {"entityType":entityType,"entityId":entityId,"entityUserId":entityUserId},
+        {"entityType":entityType,"entityId":entityId,"entityUserId":entityUserId,"postId":postId},
         function (data){
             data = $.parseJSON(data);
             if(data.code==0){

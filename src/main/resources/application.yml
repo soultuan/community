@@ -33,6 +33,15 @@ spring:
           max-idle: 10
           min-idle: 1
           time-between-eviction-runs: 10s
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /community
+    username: guest
+    password: guest
+    listener:
+      simple:
+        prefetch: 1
 
 server:
   port: 8080

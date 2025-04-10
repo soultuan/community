@@ -1,5 +1,7 @@
 package com.tuanzisama.community.controller;
 
+import com.tuanzisama.community.event.EventProducer;
+import com.tuanzisama.community.pojo.Event;
 import com.tuanzisama.community.pojo.Page;
 import com.tuanzisama.community.pojo.User;
 import com.tuanzisama.community.service.FollowService;
@@ -24,6 +26,8 @@ public class FollowController implements CommunityConstant {
     private FollowService followService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EventProducer eventProducer;
 
     @PostMapping("/follow")
     @ResponseBody
@@ -31,6 +35,13 @@ public class FollowController implements CommunityConstant {
         User user = ThreadLocalUtil.get();
         followService.follow(user.getId(),entityType,entityId);
 
+        Event event = new Event()
+                .setTopic(EVENT_FOLLOW)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId)
+                .setUserId(user.getId());
+        eventProducer.fireEvent(event);
         return CommunityUtil.getJsonString(0,"关注成功！");
     }
 

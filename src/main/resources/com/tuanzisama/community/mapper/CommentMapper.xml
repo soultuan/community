@@ -13,6 +13,12 @@
         limit #{offset},#{limit}
     </select>
 
+    <select id="selectCommentById" resultType="Comment">
+        select id,user_id,entity_type,entity_id,target_id,content,status,create_time
+        from comment
+        where id=#{commentId}
+    </select>
+
     <select id="countCommentByEntity">
         select count(id)
         from comment
