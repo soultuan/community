@@ -15,5 +15,8 @@ public interface MessageMapper {
     Integer countUnreadMessageList(@Param("conversationId") String conversationId,@Param("userId") Integer userId);
     Integer insertMessage(Message message);
     Integer updateMessageWithStatus(@Param("ids") List<Integer> ids,@Param("status") Integer status);
-
+    Message selectLatestEvent(@Param("userId") int userId,@Param("entityType") String entityType);
+    int countUnreadEvent(@Param("userId") int userId,@Param("entityType") String entityType);
+    int countEvent(@Param("userId") int userId,@Param("entityType") String entityType);
+    List<Message> selectNotices(@Param("userId") int userId,@Param("topic") String topic,@Param("offset") int offset,@Param("limit") int limit);
 }

@@ -12,4 +12,8 @@ public interface MessageService {
     Integer countUnreadMessageList(String conversationId,Integer userId);
     Integer addMessage(Message message);
     Integer readUnreadMessage(List<Integer> ids,Integer status);
+    Message selectLatestEvent(int userId,String entityType);
+    int countUnreadEvent(int userId,String entityType);
+    int countEvent(int userId,String entityType);
+    List<Message> selectNotices(int userId,String topic,int offset,int limit);
 }
